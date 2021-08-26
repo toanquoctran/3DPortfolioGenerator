@@ -4,10 +4,11 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import moon from '../img/moon.jpg';
 import normal from '../img/normal.jpg';
 import space from '../img/space.jpg';
-import Toan from '../img/Toan.JPG'
+import Toan from '../img/Toan.JPG';
+import shit from '../img/shit.mp4';
 const Resume = () => {
   const [resumeHidden, setResumeHidden] = useState(true);
-  const [userInput, setUserInput] = useState({  
+  const [userInput, setUserInput] = useState({
     name: 'N/A',
     quote: 'I gonna put some dirt in your eyes',
     address: '',
@@ -21,11 +22,14 @@ const Resume = () => {
     academic: [
 
     ]
+    , email: null,
+    phone: null,
+    intro: null,
   })
 
 
 
-  
+
 
   //ThreeJS Wrapper. Called upon developCV is Click
   function ThreeJSWrapper() {
@@ -170,11 +174,45 @@ const Resume = () => {
     setResumeHidden(!resumeHidden);
     ThreeJSWrapper();
     console.log(userInput)
-    
- 
- 
+
+
+
   }
 
+
+  function validatePhoneNumber(inputPhone) {
+    var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+
+    return re.test(inputPhone);
+  }
+
+  function validateEmail(inputText) {
+    var re2 = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+    return re2.test(inputText);
+  }
+
+  function validateForm(event) {
+    var phone = document.getElementById("contactField").value;
+    if (!validatePhoneNumber(phone)) {
+      document.getElementById("phoneError").classList.remove("hidden");
+    } else {
+      document.getElementById("phoneError").classList.add("hidden");
+      alert("validation success");
+    }
+    event.preventDefault();
+  }
+
+  function validateForm2(event) {
+    var email = document.getElementById("addressField").value;
+    if (!validateEmail(email)) {
+      document.getElementById("emailError").classList.remove("hidden");
+    } else {
+      document.getElementById("emailError").classList.add("hidden");
+      alert("validation success");
+    }
+    event.preventDefault();
+  }
 
 
 
@@ -198,7 +236,7 @@ const Resume = () => {
   const handleAddressChange = (newname) => {
     setUserInput({
       ...userInput,
-    address: newname
+      address: newname
     })
   }
   const handleInstagramChange = (newname) => {
@@ -219,31 +257,75 @@ const Resume = () => {
       facebook: newname
     })
   }
-  const handleObjectivesChange = (input) =>{
+  const handleObjectivesChange = (input) => {
     setUserInput({
       ...userInput,
       objective: input
     })
   }
 
-  const handleWorkChange = (input) =>{
+  const handleWorkChange = (input) => {
     const newWork = userInput.workexperience;
-    newWork.push(input);
+    newWork.push(input.toString());
     setUserInput({
       ...userInput,
       workexperience: newWork
     })
   }
 
-  const handleAcademicChange = (input) =>{
+  const handleIntroChange = (input) => {
+
+    setUserInput({
+      ...userInput,
+      intro: input
+    })
+  }
+
+  const handleAcademicChange = (input) => {
     const newArr = userInput.academic;
-    newArr.push(input);
+    newArr.push(input.toString());//fix this shit. every time a string is added, the string is broken into 
     setUserInput({
       ...userInput,
       academic: newArr
     })
   }
-  
+
+
+  const handleEmail = e => {
+    const val = e.target.value;
+    if (!validateEmail(val)) {
+      document.getElementById("emailError").classList.remove("hidden");
+    }
+    else {
+      document.getElementById("emailError").classList.add("hidden");
+
+      setUserInput(
+        {
+          ...userInput,
+          email: val
+        }
+      )
+
+    }
+  }
+
+  const handlePhone = e => {
+    const val = e.target.value;
+    if (!validatePhoneNumber(val)) {
+      document.getElementById("phoneError").classList.remove("hidden");
+
+    } else {
+      document.getElementById("phoneError").classList.add("hidden");
+
+      setUserInput(
+        {
+          ...userInput,
+          phone: val
+        }
+      )
+
+    }
+  }
 
 
   function addNewWEField() {
@@ -268,12 +350,12 @@ const Resume = () => {
     newNode.classList.add("mt-2");
     newNode.setAttribute("rows", 3);
     newNode.setAttribute("placeholder", "Enter here");
-    newNode.onchange=event => handleAcademicChange(event.target.value)
+    newNode.onchange = event => handleAcademicChange(event.target.value)
     let aqOb = document.getElementById("aq");
     let aqAddButtonOb = document.getElementById("aqAddButton");
 
     aqOb.insertBefore(newNode, aqAddButtonOb);
-  
+
   }
 
   function developCV() {
@@ -326,9 +408,9 @@ const Resume = () => {
 
     document.getElementById("aqT").innerHTML = str1;
 
-   setResumeHidden(false);
-   handleSubmit();
-   console.log('developCv called')
+    setResumeHidden(false);
+    handleSubmit();
+    console.log('developCv called')
   }
   // print CV
   function printCV() {
@@ -348,142 +430,174 @@ const Resume = () => {
   return (
     <div className="bg">
 
-          <div class="container" id="cv-form" style={{display: resumeHidden?'block':'none'}}>
-            <h1 class="text-center my-2">Resume Creator</h1>
-            <p class="text-center">By Toan Tran</p>
+      <div class="container" id="cv-form" style={{ display: resumeHidden ? 'block' : 'none' }}>
+        <video playsinline autoPlay muted loop id="bgvid">
+          <source src={shit} type="video/mp4" />
+        </video>
+        <h1 class="text-center my-2">Resume Creator</h1>
+        <p class="text-center">By Toan Tran</p>
 
-            <div class="row">
-                <div class="col-md-6">
-                 
-                    <h3>Personal Information</h3>
+        <div class="row">
+          <div class="col-md-6">
 
-                    <div class="form-group">
-                        <label for="nameField">Your Name</label>
-                        <input type="text" id="nameField" placeholder="Enter here" class="form-control" onChange={e=> handleNameChange(e.target.value)}/>
-                    </div>
+            <h3>Personal Information</h3>
 
-                    <div class="form-group mt-2">
-                        <label for="quoteField">Quote</label>
-                        <input type="text" id="quoteField" placeholder="Enter here" class="form-control" onChange={e=>handleQuoteChange(e.target.value)}/>
-                    </div>
-
-                    <div class="form-group mt-2">
-                        <label for="addressField">Your Address</label>
-                        <textarea id="addressField" placeholder="Enter here" class="form-control" rows="5️" onChange={e=>handleAddressChange(e.target.value)}></textarea>
-                    </div>
-
-                    <p class="text-secondary my-3">Important Links</p>
-
-                    <div class="form-group mt-2">
-                        <label for="facebookField">Facebook Link</label>
-                        <input type="text" id="facebookField" placeholder="Enter here" class="form-control" onChange={e=>handleFacebookChange(e.target.value)}/>
-                    </div>
-
-                    <div class="form-group mt-2">
-                        <label for="instagramField">Instagram</label>
-                        <input type="text" id="instagramField" placeholder="Enter here" class="form-control" onChange={e=>handleInstagramChange(e.target.value)}/>
-                    </div>
-
-                    <div class="form-group mt-2">
-                        <label for="linkedinField">LinkedIn</label>
-                        <input type="text" id="linkedinField" placeholder="Enter here" class="form-control" onChange={e=>handleLinkedInChange(e.target.value)}/>
-                    </div>
-                </div>
-                <div class="col-md-6">
-
-                    <h3>Professional Information</h3>
-                    <div class="form-group mt-2">
-                        <label for="">Objectives</label>
-                        <textarea id="objectivesField" placeholder="Enter here" class="form-control weField" onChange={e=>handleObjectivesChange(e.target.value)}
-                            rows="5"></textarea>
-                    </div>
-
-                    <div class="form-group mt-2" id="we">
-                        <label for="">Work Experience</label>
-                        <textarea placeholder="Enter here" class="form-control weField" rows="3" onChange={e=>handleWorkChange(e.target.value)}></textarea>
-
-
-                        <div class="container text-center mt-2" id="weAddButton">
-                            <button onClick={addNewWEField} class="btn btn-primary btn-sm" >
-                                Add 
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="form-group mt-2" id="aq">
-                        <label for="">Academic Qualifications</label>
-                        <textarea placeholder="Enter here" class="form-control aqField" rows="3" onChange={e=>handleAcademicChange(e.target.value)}></textarea>
-
-                        <div class="container text-center mt-2" id="aqAddButton">
-                            <button onClick={addNewAQField} class="btn btn-primary btn-sm">
-                                Add
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div class="form-group">
+              <label for="nameField">Your Name</label>
+              <input type="text" id="nameField" placeholder="Enter here" class="form-control" onChange={e => handleNameChange(e.target.value)} />
             </div>
 
-            <div class="container text-center mt-3">
-                <button onClick={handleSubmit} class="btn btn-primary btn-lg">
-                    Develop CV
-                </button>
+
+
+
+
+            <div className="row">
+              <div class="col col-5 form-group mt-2">
+                <form id="myform">
+                  <div>
+                    <label for="contactField">Phone Number</label>
+                    <input type="tel" id="contactField" placeholder="Enter here" class="form-control" name="phone" onChange={e => handlePhone(e)} />
+                    <div id="phoneError" class="error hidden">
+                      Please enter a valid phone number
+                    </div>
+                  </div>
+
+                </form>
+              </div>
+
+              <div class="col col-6 offset-1 form-group mt-2">
+                <form id="myform2">
+                  <div>
+                    <label for="addressField">Email Address</label>
+                    <input type="email" id="addressField" placeholder="Enter here" class="form-control" name="email" onChange={e => handleEmail(e)} />
+                    <div id="emailError" class="error hidden">
+                      Please enter a valid email address
+                    </div>
+                  </div>
+
+                </form>
+              </div>
+            </div>
+
+
+
+            <div class="form-group mt-2">
+              <label for="quoteField">Quote</label>
+              <input type="text" id="quoteField" placeholder="Enter here" class="form-control" onChange={e => handleQuoteChange(e.target.value)} />
+            </div>
+
+            <div class="form-group mt-2">
+              <label for="addressField">Your Address</label>
+              <textarea id="addressField" placeholder="Enter here" class="form-control" rows="5️" onChange={e => handleAddressChange(e.target.value)}></textarea>
+            </div>
+
+            <h3 >Important Links</h3>
+
+            <div class="form-group mt-2">
+              <label for="facebookField">Facebook Link</label>
+              <input type="text" id="facebookField" placeholder="Enter here" class="form-control" onChange={e => handleFacebookChange(e.target.value)} />
+            </div>
+
+            <div class="form-group mt-2">
+              <label for="instagramField">Instagram</label>
+              <input type="text" id="instagramField" placeholder="Enter here" class="form-control" onChange={e => handleInstagramChange(e.target.value)} />
+            </div>
+
+            <div class="form-group mt-2">
+              <label for="linkedinField">LinkedIn</label>
+              <input type="text" id="linkedinField" placeholder="Enter here" class="form-control" onChange={e => handleLinkedInChange(e.target.value)} />
             </div>
           </div>
+          <div class="col-md-6">
+
+            <h3>Professional Information</h3>
+            <div class="form-group mt-2">
+              <label for="">Objectives</label>
+              <textarea id="objectivesField" placeholder="Enter here" class="form-control weField" onChange={e => handleObjectivesChange(e.target.value)}
+                rows="5"></textarea>
+            </div>
+
+            <div class="form-group mt-2" id="we">
+              <label for="">Work Experience</label>
+              <textarea placeholder="Enter here" class="form-control weField" rows="3" onChange={e => handleWorkChange(e.target.value)}></textarea>
+
+
+              <div class="container text-center mt-2" id="weAddButton">
+                <button onClick={addNewWEField} class="btn btn-primary btn-sm" >
+                  Add
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group mt-2" id="aq">
+              <label for="">Academic Qualifications</label>
+              <textarea placeholder="Enter here" class="form-control aqField" rows="3" onChange={e => handleAcademicChange(e.target.value)}></textarea>
+
+              <div class="container text-center mt-2" id="aqAddButton">
+                <button onClick={addNewAQField} class="btn btn-primary btn-sm">
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container text-center mt-3">
+          <button onClick={handleSubmit} class="btn btn-primary btn-lg">
+            Develop CV
+          </button>
+        </div>
+      </div>
 
 
 
 
-          <div style={{ display: resumeHidden ? 'none':'block'}}>
+      <div style={{ display: resumeHidden ? 'none' : 'block' }}>
         <canvas id="bg"></canvas>
         <main>
 
           <header>
             <h1>{userInput.name}</h1>
+            {userInput.intro}
             <p>🚀 Welcome to my website!</p>
           </header>
 
 
           <blockquote>
-            <p>{userInput.quote}</p>
+            <p>{userInput.objective}</p>
           </blockquote>
 
           <section>
-            <h2>📜 Manifesto</h2>
-            <p>I am a UMass Amherst computer science sophomore. Studying front-end techniques and designing beautiful websites are all my passions.
-              <br />
-              Some shite about you
-              <p>Check out my work <a href="https://github.com/nguyenvothuan">Here</a></p>
+            <h2>📜 Personal Information</h2>
+            <p>
+              Phone Number: {userInput.phone}
+            </p>
+
+            <p>
+              Email: {userInput.email}
+            </p>
+
+            <p>
+              Address: {userInput.email}
             </p>
 
           </section>
 
           <section class="light">
-            <h2>👩🏽‍🚀 Projects</h2>
+            <h2>👩🏽‍🚀 Accademic Qualifications</h2>
+            {userInput.academic.map(aq => {
+              return (
+                <>
+                  <h2>🏆 Accomplishments</h2>
+                  
+                  <p>
+                    {aq}
+                  </p>
+                </>
+              )
+            })}
 
-            <p>
-              Projects are the always option I use to hone my coding skills.
-              <br />
-              If you are interested in what I have done, check out my porfolio:
-              <br />
-              Or github: <a>https://github.com/nguyenvothuan</a>
-              <br />
-              Or you would like a summary? Well, in the portfolio, I include:
-              <ul>
-                <li><a href="https://trinhstartup.netlify.app/">My start up project's website:</a> a front-end outlay I built under instruction from Brian Design's video. I use this outlay for me and my sister's start-up: A platform to connect people with advanced English skill and potential clients seeking English support like translator, English tutor, writing and editting. Tag: #styled-components, #reactjs,   </li>
-                <li><a href="https://nguyenvothuan.github.io/Tetris/">Tetris game!</a> I use React Hook as state management to build this simple game with the CSS referenced from Weiben Falk. Thanks a lot my favorite teacher :). </li>
-                <li><a href="https://nguyenvothuan.github.io/Sudoku/">Sudoku</a> with pure HTML, CSS, and JS. I am currently working on this project with my friends. Much of the front-end work is done. We are waiting for a method using Backtracking algorithm to solve and generate more games. We are also working on a function to accept image input from users and produce a complete solution.</li>
-                <li><a href="https://github.com/nguyenvothuan/Con-Fusion-Website/tree/master">Con Fusion Ristorance </a>. I built this restaurant's website when I was studying Coursera React course. There was no React Hook back then, so I used Redux. For styling I use ReactStrap.</li>
-                <li><a href="https://redstorereact.netlify.app">RedStore E-commerce website</a></li>
-              </ul>
-
-
-            </p>
-
-            <h2>🏆 Accomplishments</h2>
-
-            <p>
-              Your hiring me will be a proud accomplishment in this list! :D
-            </p>
+           
 
           </section>
 
@@ -492,25 +606,24 @@ const Resume = () => {
           </blockquote>
 
           <section class="left">
-            <h2>🌮 Academic</h2>
+            <h2>🌮 Work History</h2>
 
-            <h3>2017 - 2020: Physics major,  Highschool for the Gifted - Vietnam National University</h3>
-            <p>
-              GPA: 3.5 <br />
-              Honors and Awards: Excelent performance - 5/6 semesters
-            </p>
+            {
+              userInput.workexperience.map(we => {
+                return (
+                  <>
+                    <h3>Work</h3>
+                    <p>
+                    🚀{we}
+                    </p>
+                  </>
+                )
+              })
+            }
 
-            <h3>2020 - Present: CS and Math major, UMass Amherst</h3>
-            <p>
-              GPA: 3.92 <br />
-              Honors and Awards: Dean Lists - All semesters, Chancellor Scholarship.
-            </p>
 
-            <h2>&#x270D;Technical Skills</h2>
 
-            <h3>Languages: </h3><p>Java, JavaScript, C#, Python</p>
-            <h3>Statistic and Database: </h3><p>SQL</p>
-            <h3>Front-end skills: </h3><p>HTML, CSS, and React JS</p>
+
           </section>
 
           <blockquote>
