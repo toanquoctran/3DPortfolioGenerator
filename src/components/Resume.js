@@ -385,49 +385,45 @@ const Resume = () => {
     document.getElementById("nameT2").innerHTML = nameField;
 
     // contact
-    document.getElementById("quoteT").innerHTML =
-      document.getElementById("contactField").value;
+    document.getElementById("contactT").innerHTML =
+        document.getElementById("contactField").value;
     document.getElementById("facebookT").innerHTML =
-      document.getElementById("facebookField").value;
+        document.getElementById("facebookField").value;
     document.getElementById("instagramT").innerHTML =
-      document.getElementById("instagramField").value;
+        document.getElementById("instagramField").value;
     document.getElementById("linkedinT").innerHTML =
-      document.getElementById("linkedinField").value;
+        document.getElementById("linkedinField").value;
 
     // address
     document.getElementById("addressT").innerHTML =
-      document.getElementById("addressField").value;
+        document.getElementById("addressField").value;
 
     // objectives
     document.getElementById("objectivesT").innerHTML =
-      document.getElementById("objectivesField").value;
+        document.getElementById("objectivesField").value;
 
     // work experience
-    let wes = document.getElementsByClassName("weField");
+    let wes = Array.from(document.getElementsByClassName("weField"));
+    let weT = document.getElementById("weT");
+    wes.map((we) => {
+        let li = document.createElement("li");
+        li.innerHTML = we.value;
+        weT.appendChild(li);
+    });
 
-    let str = "";
+    // academic qualification
 
-    for (let e of wes) {
-      str += `<li>${e.value}</li>`;
-    }
+    let aqs = Array.from(document.getElementsByClassName("aqField"));
+    let aqT = document.getElementById("aqT");
+    aqs.map((aq) => {
+        let li = document.createElement("li");
+        li.innerHTML = aq.value;
+        aqT.appendChild(li);
+    });
 
-    document.getElementById("weT").innerHTML = str;
-
-    // academic qualifications
-    let aqs = document.getElementsByClassName("aqField");
-
-    let str1 = "";
-
-    for (let q of aqs) {
-      str1 += `<li>${q.value}</li>`;
-    }
-
-    document.getElementById("aqT").innerHTML = str1;
-
-    setResumeHidden(false);
-    handleSubmit();
-    console.log('developCv called')
-  }
+    document.getElementById("cv-form").style.display = "none";
+    document.getElementById("cv-template").style.display = "block";
+}
   // print CV
   function printCV() {
     window.print();
