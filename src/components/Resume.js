@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import moon from '../img/moon.jpg';
+import moonImg from '../img/moon.jpg';
 import normal from '../img/normal.jpg';
 import space from '../img/space.jpg';
 import Toan from '../img/Toan.JPG';
 import shit from '../img/shit.mp4';
+import random from '../img/random.jpg'
 const Resume = () => {
   const [resumeHidden, setResumeHidden] = useState(true);
   const [userInput, setUserInput] = useState({
@@ -25,6 +26,7 @@ const Resume = () => {
     , email: null,
     phone: null,
     intro: null,
+    files: null,
   })
 
 
@@ -97,12 +99,12 @@ const Resume = () => {
 
     // Background
 
-    const spaceTexture = new THREE.TextureLoader().load("space.jpg");
+    const spaceTexture = new THREE.TextureLoader().load(space);
     scene.background = spaceTexture;
 
     // Avatar
 
-    const toanTexture = new THREE.TextureLoader().load("Toan.JPG");
+    const toanTexture = new THREE.TextureLoader().load(!userInput.files ? random : userInput.files);
 
     const toan = new THREE.Mesh(
       new THREE.BoxGeometry(3, 3, 3),
@@ -113,8 +115,8 @@ const Resume = () => {
 
     // Moon
 
-    const moonTexture = new THREE.TextureLoader().load('./moon.jpg');
-    const normalTexture = new THREE.TextureLoader().load("normal.jpg");
+    const moonTexture = new THREE.TextureLoader().load(moonImg);
+    const normalTexture = new THREE.TextureLoader().load(normal);
 
     const moon = new THREE.Mesh(
       new THREE.SphereGeometry(3, 32, 32),
@@ -214,7 +216,9 @@ const Resume = () => {
     event.preventDefault();
   }
 
-
+  function validateFile (file) {
+    return true;
+  }
 
 
   //Form handle functions
@@ -289,6 +293,18 @@ const Resume = () => {
       academic: newArr
     })
   }
+
+  const handleFileChange = (e) => {
+    //return true if file is of type jpg, png, svg, ... false otherwise  
+      setUserInput (
+        {
+          ...userInput,
+          files: URL.createObjectURL(e.target.files[0])
+        }
+      )
+    }
+  
+
 
 
   const handleEmail = e => {
@@ -417,11 +433,7 @@ const Resume = () => {
     window.print();
   }
 
-
-
-
-
-
+ 
 
 
 
@@ -479,7 +491,13 @@ const Resume = () => {
               </div>
             </div>
 
-
+            <div class="form-group mt-2">
+                    <label for="avaField">Profile Picture</label>
+                    <input type="file" id="fileSelector" accept="image/png, image/jpeg, image/jpg" onChange={e=> handleFileChange(e)}/>
+                    <div id="fileError" class="error hidden" >
+                      Only .png, .svg, .jpg files are accepted.
+                    </div>
+                </div>
 
             <div class="form-group mt-2">
               <label for="quoteField">Quote</label>
