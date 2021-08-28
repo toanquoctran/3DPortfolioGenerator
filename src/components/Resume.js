@@ -409,7 +409,7 @@ const Resume = () => {
         <
         video playsinline autoPlay muted loop id = "bgvid" >
         <
-        source src = { Toan }
+        source src = { shit }
         type = "video/mp4" / >
         <
         /video>{" "} <
